@@ -16,6 +16,7 @@ const uint8_t thumbprint[20] = {0xf8, 0x7e, 0x63, 0xa9, 0x4e, 0x2b, 0xf7, 0xfa, 
 String URL = "";
 
 
+
 void CheckWifi() {
   if(WiFi.status() != WL_CONNECTED) wifiConnect();
 }
@@ -23,7 +24,7 @@ void CheckWifi() {
 void SetupWifi() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
   // Making sure all NodeMCU's have a different name!
-  deviceName = "NodeMCU_g" + String(random(0x7FFFFFFF));
+  deviceName = "NodeMCU_" + String(random(0x7FFFFFFF));
   WiFi.hostname(deviceName.c_str());
 
   if(serverProtocol.length() > 0 && serverIP.length() > 0 && serverDirectory.length() > 0) {
@@ -84,6 +85,10 @@ void SendPOST(char message[]) {
     Serial.println("]");
     
     https.end();
+
+    if(responseCode == 200){
+      ReadJSON(responseMsg);
+    }
   } else {
     Serial.println("[HTTPS] Could not start POST request...");
   }
